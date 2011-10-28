@@ -238,80 +238,87 @@
 #  define __FreeBSD_kernel_version __FreeBSD_version
 # endif
 
-#   ifdef SYSCONS_SUPPORT
-#    define COMPAT_SYSCONS
-#    if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#       if defined(__DragonFly__)  || (__FreeBSD_kernel_version >= 410000)
-#         include <sys/consio.h>
-#         include <sys/kbio.h>
-#       else
-#         include <machine/console.h>
-#       endif /* FreeBSD 4.1 RELEASE or lator */
-#    else
-#     include <sys/console.h>
-#    endif
-#   endif /* SYSCONS_SUPPORT */
-#   if defined(PCVT_SUPPORT) && !defined(__NetBSD__) && !defined(__OpenBSD__)
-#    if !defined(SYSCONS_SUPPORT)
-      /* no syscons, so include pcvt specific header file */
-#     if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
-#      include <machine/pcvt_ioctl.h>
-#     else
-#      include <sys/pcvt_ioctl.h>
-#     endif /* __FreeBSD_kernel__ */
-#    else /* pcvt and syscons: hard-code the ID magic */
-#     define VGAPCVTID _IOWR('V',113, struct pcvtid)
+# ifdef SYSCONS_SUPPORT
+#  define COMPAT_SYSCONS
+#  if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
+#   if defined(__DragonFly__)  || (__FreeBSD_kernel_version >= 410000)
+#    include <sys/consio.h>
+#    include <sys/kbio.h>
+#   else
+#    include <machine/console.h>
+#   endif /* FreeBSD 4.1 RELEASE or lator */
+#  else
+#   include <sys/console.h>
+#  endif
+# endif /* SYSCONS_SUPPORT */
+
+# if defined(PCVT_SUPPORT) && !defined(__NetBSD__) && !defined(__OpenBSD__)
+#  if !defined(SYSCONS_SUPPORT)
+    /* no syscons, so include pcvt specific header file */
+#   if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
+#    include <machine/pcvt_ioctl.h>
+#   else
+#    include <sys/pcvt_ioctl.h>
+#   endif /* __FreeBSD_kernel__ */
+#  else /* pcvt and syscons: hard-code the ID magic */
+#   define VGAPCVTID _IOWR('V',113, struct pcvtid)
       struct pcvtid {
 	char name[16];
 	int rmajor, rminor;
       };
-#    endif /* PCVT_SUPPORT && SYSCONS_SUPPORT */
-#   endif /* PCVT_SUPPORT */
-#   ifdef WSCONS_SUPPORT
-#    include <dev/wscons/wsconsio.h>
-#    include <dev/wscons/wsdisplay_usl_io.h>
-#   endif /* WSCONS_SUPPORT */
-#   if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#    if defined(__FreeBSD_kernel_version) && (__FreeBSD_kernel_version >= 500013)
-#     include <sys/mouse.h>
-#    else
-#     undef MOUSE_GETINFO
-#     include <machine/mouse.h>
-#    endif
-#   endif
-    /* Include these definitions in case ioctl_pc.h didn't get included */
-#   ifndef CONSOLE_X_MODE_ON
-#    define CONSOLE_X_MODE_ON _IO('t',121)
-#   endif
-#   ifndef CONSOLE_X_MODE_OFF
-#    define CONSOLE_X_MODE_OFF _IO('t',122)
-#   endif
-#   ifndef CONSOLE_X_BELL
-#    define CONSOLE_X_BELL _IOW('t',123,int[2])
-#   endif
-#   ifndef CONSOLE_X_TV_ON
-#    define CONSOLE_X_TV_ON _IOW('t',155,int)
-#    define XMODE_RGB   0
-#    define XMODE_NTSC  1
-#    define XMODE_PAL   2
-#    define XMODE_SECAM 3
-#   endif
-#   ifndef CONSOLE_X_TV_OFF
-#    define CONSOLE_X_TV_OFF _IO('t',156)
-#   endif
-#ifndef CONSOLE_GET_LINEAR_INFO
-#    define CONSOLE_GET_LINEAR_INFO         _IOR('t',157,struct map_info)
-#endif
-#ifndef CONSOLE_GET_IO_INFO 
-#    define CONSOLE_GET_IO_INFO             _IOR('t',158,struct map_info)
-#endif
-#ifndef CONSOLE_GET_MEM_INFO 
-#    define CONSOLE_GET_MEM_INFO            _IOR('t',159,struct map_info)
-#endif
+#  endif /* PCVT_SUPPORT && SYSCONS_SUPPORT */
+# endif /* PCVT_SUPPORT */
 
-#if defined(USE_I386_IOPL) || defined(USE_AMD64_IOPL)
-#include <machine/sysarch.h>
-#endif
+# ifdef WSCONS_SUPPORT
+#  include <dev/wscons/wsconsio.h>
+#  include <dev/wscons/wsdisplay_usl_io.h>
+# endif /* WSCONS_SUPPORT */
+
+# if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
+#  if defined(__FreeBSD_kernel_version) && (__FreeBSD_kernel_version >= 500013)
+#   include <sys/mouse.h>
+#  else
+#   undef MOUSE_GETINFO
+#   include <machine/mouse.h>
+#  endif
+# endif
+
+/* Include these definitions in case ioctl_pc.h didn't get included */
+# ifdef PCCONS_SUPPORT
+#  ifndef CONSOLE_X_MODE_ON
+#   define CONSOLE_X_MODE_ON _IO('t',121)
+#  endif
+#  ifndef CONSOLE_X_MODE_OFF
+#   define CONSOLE_X_MODE_OFF _IO('t',122)
+#  endif
+#  ifndef CONSOLE_X_BELL
+#   define CONSOLE_X_BELL _IOW('t',123,int[2])
+#  endif
+#  ifndef CONSOLE_X_TV_ON
+#   define CONSOLE_X_TV_ON _IOW('t',155,int)
+#   define XMODE_RGB   0
+#   define XMODE_NTSC  1
+#   define XMODE_PAL   2
+#   define XMODE_SECAM 3
+#  endif
+#  ifndef CONSOLE_X_TV_OFF
+#   define CONSOLE_X_TV_OFF _IO('t',156)
+#  endif
+# endif /* PCCONS_SUPPORT */
+
+# ifndef CONSOLE_GET_LINEAR_INFO
+#  define CONSOLE_GET_LINEAR_INFO         _IOR('t',157,struct map_info)
+# endif
+# ifndef CONSOLE_GET_IO_INFO
+#  define CONSOLE_GET_IO_INFO             _IOR('t',158,struct map_info)
+# endif
+# ifndef CONSOLE_GET_MEM_INFO
+#  define CONSOLE_GET_MEM_INFO            _IOR('t',159,struct map_info)
+# endif
+
+# if defined(USE_I386_IOPL) || defined(USE_AMD64_IOPL)
+#  include <machine/sysarch.h>
+# endif
 
 # define CLEARDTR_SUPPORT
 
