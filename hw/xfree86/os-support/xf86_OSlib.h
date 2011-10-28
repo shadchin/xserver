@@ -241,12 +241,8 @@
 # ifdef SYSCONS_SUPPORT
 #  define COMPAT_SYSCONS
 #  if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#   if defined(__DragonFly__)  || (__FreeBSD_kernel_version >= 410000)
-#    include <sys/consio.h>
-#    include <sys/kbio.h>
-#   else
-#    include <machine/console.h>
-#   endif /* FreeBSD 4.1 RELEASE or lator */
+#   include <sys/consio.h>
+#   include <sys/kbio.h>
 #  else
 #   include <sys/console.h>
 #  endif
@@ -275,12 +271,7 @@
 # endif /* WSCONS_SUPPORT */
 
 # if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#  if defined(__FreeBSD_kernel_version) && (__FreeBSD_kernel_version >= 500013)
-#   include <sys/mouse.h>
-#  else
-#   undef MOUSE_GETINFO
-#   include <machine/mouse.h>
-#  endif
+#  include <sys/mouse.h>
 # endif
 
 /* Include these definitions in case ioctl_pc.h didn't get included */
