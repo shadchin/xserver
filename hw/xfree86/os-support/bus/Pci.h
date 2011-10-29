@@ -118,9 +118,6 @@
 #define PCI_DOM_MASK 0x0ffu
 #endif
 
-#ifndef PCI_DOM_MASK
-# define PCI_DOM_MASK 0x0ffu
-#endif
 #define PCI_DOMBUS_MASK (((PCI_DOM_MASK) << 8) | 0x0ffu)
 
 #define PCI_MAKE_BUS(d,b)    ((((d) & (PCI_DOM_MASK)) << 8) | ((b) & 0xffu))
