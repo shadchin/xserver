@@ -123,18 +123,10 @@
 #endif
 #define PCI_DOMBUS_MASK (((PCI_DOM_MASK) << 8) | 0x0ffu)
 
-/*
- * "b" contains an optional domain number.
- */
-#define PCI_MAKE_TAG(b,d,f)  ((((b) & (PCI_DOMBUS_MASK)) << 16) | \
-			      (((d) & 0x00001fu) << 11) | \
-			      (((f) & 0x000007u) << 8))
-
 #define PCI_MAKE_BUS(d,b)    ((((d) & (PCI_DOM_MASK)) << 8) | ((b) & 0xffu))
 
 #define PCI_DOM_FROM_BUS(bus)  (((bus) >> 8) & (PCI_DOM_MASK))
 #define PCI_BUS_NO_DOMAIN(bus) ((bus) & 0xffu)
-#define PCI_TAG_NO_DOMAIN(tag) ((tag) & 0x00ffff00u)
 
 #if defined(linux) || defined(__sun) || defined(__GNU__) || \
 	defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
