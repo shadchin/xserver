@@ -95,11 +95,11 @@ xf86PciProbe(void)
     struct pci_device_iterator *iter;
     struct pci_device ** xf86PciVideoInfo = NULL;
 
-
-    if (!xf86scanpci()) {
-	xf86PciVideoInfo = NULL;
+    if (pci_system_init())
 	return;
-    }
+
+    /* choose correct platform/OS specific PCI init routine */
+    osPciInit();
 
     iter = pci_slot_match_iterator_create(& xf86IsolateDevice);
     while ((info = pci_device_next(iter)) != NULL) {
