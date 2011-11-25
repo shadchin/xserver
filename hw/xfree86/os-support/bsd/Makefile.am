@@ -1,16 +1,5 @@
 noinst_LTLIBRARIES = libbsd.la
 
-# APM support.
-if BSD_KQUEUE_APM
-APM_SOURCES = $(srcdir)/bsd_kqueue_apm.c
-else 
-if BSD_APM
-APM_SOURCES = $(srcdir)/bsd_apm.c
-else
-APM_SOURCES = $(srcdir)/../shared/pm_noop.c
-endif
-endif
-
 if FREEBSD_KLDLOAD
 KMOD_SOURCES = bsd_kmod.c
 else
@@ -57,6 +46,7 @@ AM_CFLAGS = -DUSESTDRES $(XORG_CFLAGS) $(DIX_CFLAGS)
 INCLUDES = $(XORG_INCS)
 
 libbsd_la_SOURCES = \
+	$(srcdir)/../shared/pm_noop.c \
 	$(srcdir)/../shared/posix_tty.c \
 	$(srcdir)/../shared/sigio.c \
 	$(srcdir)/../shared/vidmem.c \
