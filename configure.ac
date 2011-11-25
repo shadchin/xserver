@@ -1632,17 +1632,7 @@ if test "x$XORG" = xyes; then
 			;;
 		esac
 		;;
-	  freebsd* | kfreebsd*-gnu | dragonfly*)
-		XORG_OS_SUBDIR="bsd"
-		;;
-	  netbsd*)
-		XORG_OS_SUBDIR="bsd"
-		;;
-	  openbsd*)
-		if test "x$ac_cv_BSD_APM" = xyes \
-			-o "x$ac_cv_BSD_KQUEUE_APM" = xyes; then
-			XORG_CFLAGS="$XORG_CFLAGS -DXF86PM"
-		fi
+	  freebsd* | kfreebsd*-gnu | dragonfly* | netbsd* | openbsd*)
 		XORG_OS_SUBDIR="bsd"
 		;;
 	  solaris*)
