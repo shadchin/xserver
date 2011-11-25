@@ -93,7 +93,7 @@
  * This has been generalised to work with Linux and *BSD+syscons (DHD)
  */
 
-Bool VTSwitchEnabled = TRUE;		/* Allows run-time disabling for
+static Bool VTSwitchEnabled = TRUE;	/* Allows run-time disabling for
                                          *BSD and for avoiding VT
                                          switches when using the DRI
                                          automatic full screen mode.*/
