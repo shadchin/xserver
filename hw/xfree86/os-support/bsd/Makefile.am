@@ -60,7 +60,3 @@ libbsd_la_SOURCES = \
 	$(DRI_SOURCES) \
 	$(KMOD_SOURCES) \
 	$(RES_SOURCES)
-
-# FIXME: Add these files to the build as needed
-EXTRA_DIST = \
-	memrange.h

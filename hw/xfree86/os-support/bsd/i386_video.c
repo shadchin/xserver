@@ -35,12 +35,8 @@
 #include <sys/mman.h>
 
 #ifdef HAS_MTRR_SUPPORT
-#ifndef __NetBSD__
 #include <sys/types.h>
 #include <sys/memrange.h>
-#else
-#include "memrange.h"
-#endif
 #define X_MTRR_ID "XFree86"
 #endif
 
