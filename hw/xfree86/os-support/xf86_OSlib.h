@@ -236,8 +236,6 @@
 #define __FreeBSD_kernel_version __FreeBSD_version
 #endif
 
-#if !defined(LINKKIT)
-  /* Don't need this stuff for the Link Kit */
 #ifdef SYSCONS_SUPPORT
 #define COMPAT_SYSCONS
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
@@ -308,7 +306,6 @@ struct pcvtid {
 #ifndef CONSOLE_GET_MEM_INFO
 #define CONSOLE_GET_MEM_INFO            _IOR('t',159,struct map_info)
 #endif
-#endif                          /* !LINKKIT */
 
 #if defined(USE_I386_IOPL) || defined(USE_AMD64_IOPL)
 #include <machine/sysarch.h>
