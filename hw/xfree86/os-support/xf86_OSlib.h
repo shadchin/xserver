@@ -239,16 +239,13 @@
 #ifdef SYSCONS_SUPPORT
 #define COMPAT_SYSCONS
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#if defined(__DragonFly__)  || (__FreeBSD_kernel_version >= 410000)
 #include <sys/consio.h>
 #include <sys/kbio.h>
-#else
-#include <machine/console.h>
-#endif                          /* FreeBSD 4.1 RELEASE or lator */
 #else
 #include <sys/console.h>
 #endif
 #endif                          /* SYSCONS_SUPPORT */
+
 #if defined(PCVT_SUPPORT) && !defined(__NetBSD__) && !defined(__OpenBSD__)
 #if !defined(SYSCONS_SUPPORT)
       /* no syscons, so include pcvt specific header file */
@@ -265,17 +262,14 @@ struct pcvtid {
 };
 #endif                          /* PCVT_SUPPORT && SYSCONS_SUPPORT */
 #endif                          /* PCVT_SUPPORT */
+
 #ifdef WSCONS_SUPPORT
 #include <dev/wscons/wsconsio.h>
 #include <dev/wscons/wsdisplay_usl_io.h>
 #endif                          /* WSCONS_SUPPORT */
+
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__DragonFly__)
-#if defined(__FreeBSD_kernel_version) && (__FreeBSD_kernel_version >= 500013)
 #include <sys/mouse.h>
-#else
-#undef MOUSE_GETINFO
-#include <machine/mouse.h>
-#endif
 #endif
 
 #ifdef PCCONS_SUPPORT

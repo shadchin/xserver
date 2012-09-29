@@ -35,7 +35,6 @@
 #include "xf86Priv.h"
 #include "xf86_OSlib.h"
 
-#include <sys/utsname.h>
 #include <sys/ioctl.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -157,10 +156,6 @@ xf86OpenConsole()
 
 #if defined (SYSCONS_SUPPORT) || defined (PCVT_SUPPORT)
     int result;
-
-#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
-    struct utsname uts;
-#endif
     vtmode_t vtmode;
 #endif
 
@@ -224,18 +219,6 @@ xf86OpenConsole()
             break;
 #endif
 #if defined (SYSCONS_SUPPORT) || defined (PCVT_SUPPORT)
-        case SYSCONS:
-            /* as of FreeBSD 2.2.8, syscons driver does not need the #1 vt
-             * switching anymore. Here we check for FreeBSD 3.1 and up.
-             * Add cases for other *BSD that behave the same.
-             */
-#if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
-            uname(&uts);
-            i = atof(uts.release) * 100;
-            if (i >= 310)
-                goto acquire_vt;
-#endif
-            /* otherwise fall through */
         case PCVT:
 #if !(defined(__NetBSD__) && (__NetBSD_Version__ >= 200000000))
             /*
@@ -251,7 +234,8 @@ xf86OpenConsole()
                 sleep(1);
             }
 #endif
- acquire_vt:
+            /* FALLTHROUGH */
+        case SYSCONS:
             if (!xf86Info.ShareVTs) {
                 /*
                  * now get the VT
@@ -370,24 +354,10 @@ xf86OpenSyscons()
                 xf86Info.vtno = initialVT;
 
             if (xf86Info.vtno == -1) {
-                /*
-                 * For old syscons versions (<0x100), VT_OPENQRY returns
-                 * the current VT rather than the next free VT.  In this
-                 * case, the server gets started on the current VT instead
-                 * of the next free VT.
-                 */
-
-#if 0
-                /* check for the fixed VT_OPENQRY */
-                if (syscons_version >= 0x100) {
-#endif
-                    if (ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) {
-                        /* No free VTs */
-                        xf86Info.vtno = -1;
-                    }
-#if 0
+                if (ioctl(fd, VT_OPENQRY, &xf86Info.vtno) < 0) {
+                    /* No free VTs */
+                    xf86Info.vtno = -1;
                 }
-#endif
 
                 if (xf86Info.vtno == -1) {
                     /*
@@ -397,17 +367,8 @@ xf86OpenSyscons()
                         xf86Info.vtno = initialVT;
                     }
                     else {
-                        if (syscons_version >= 0x100) {
-                            FatalError("%s: Cannot find a free VT",
-                                       "xf86OpenSyscons");
-                        }
-                        /* Should no longer reach here */
-                        FatalError("%s: %s %s\n\t%s %s",
-                                   "xf86OpenSyscons",
-                                   "syscons versions prior to 1.0 require",
-                                   "either the",
-                                   "server's stdin be a VT",
-                                   "or the use of the vtxx server option");
+                        FatalError("%s: Cannot find a free VT",
+                                   "xf86OpenSyscons");
                     }
                 }
                 from = X_PROBED;
@@ -425,13 +386,8 @@ xf86OpenSyscons()
             }
             xf86Info.consType = SYSCONS;
             xf86Msg(X_PROBED, "Using syscons driver with X support");
-            if (syscons_version >= 0x100) {
-                xf86ErrorF(" (version %ld.%ld)\n", syscons_version >> 8,
-                           syscons_version & 0xFF);
-            }
-            else {
-                xf86ErrorF(" (version 0.x)\n");
-            }
+            xf86ErrorF(" (version %ld.%ld)\n", syscons_version >> 8,
+                       syscons_version & 0xFF);
             xf86Msg(from, "using VT number %d\n\n", xf86Info.vtno);
         }
         else {
