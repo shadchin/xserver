@@ -140,7 +140,7 @@
 #elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || \
 	defined(__OpenBSD__) || defined(__NetBSD__) || \
 	defined(__DragonFly__) || defined(__sun) || defined(__GNU__)
-extern void osPciInit(void);
+#define osPciInit(x) do { xf86InitVidMem(); } while (0)
 #else
 #error No PCI support available for this architecture/OS combination
 #endif
