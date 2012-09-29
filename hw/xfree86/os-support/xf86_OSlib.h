@@ -277,6 +277,8 @@ struct pcvtid {
 #include <machine/mouse.h>
 #endif
 #endif
+
+#ifdef PCCONS_SUPPORT
     /* Include these definitions in case ioctl_pc.h didn't get included */
 #ifndef CONSOLE_X_MODE_ON
 #define CONSOLE_X_MODE_ON _IO('t',121)
@@ -297,6 +299,8 @@ struct pcvtid {
 #ifndef CONSOLE_X_TV_OFF
 #define CONSOLE_X_TV_OFF _IO('t',156)
 #endif
+#endif                          /* PCCONS_SUPPORT */
+
 #ifndef CONSOLE_GET_LINEAR_INFO
 #define CONSOLE_GET_LINEAR_INFO         _IOR('t',157,struct map_info)
 #endif
